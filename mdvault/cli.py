@@ -6,11 +6,11 @@ import os
 import sys
 import re
 import json
-import random
+import random as random_module
 import subprocess
 from pathlib import Path
 from datetime import datetime
-from typing import List, Optional, Set
+from typing import List, Optional, Set, Tuple
 from rich.console import Console
 from rich.table import Table
 from rich.markdown import Markdown
@@ -72,7 +72,7 @@ def git_commit(vault_path: Path, message: str):
         pass  # Silent fail if git not available
 
 
-def extract_frontmatter(content: str) -> tuple[dict, str]:
+def extract_frontmatter(content: str) -> Tuple[dict, str]:
     """Extract frontmatter and body from markdown content."""
     fm_match = re.match(r'^---\n(.*?)\n---\n(.*)', content, re.DOTALL)
     if not fm_match:
@@ -279,10 +279,10 @@ tags:
         console.print(Markdown(content))
 
 
-@cli.command()
+@cli.command(name="list")
 @click.argument("query", required=False)
 @click.option("--tag", "-t", help="Filter by tag")
-def list(query, tag):
+def list_notes(query, tag):
     """List all notes in the vault."""
     vault = ensure_vault()
     
@@ -375,9 +375,9 @@ def recent(limit):
     console.print(table)
 
 
-@cli.command()
+@cli.command(name="random")
 @click.option("--edit", "-e", is_flag=True, help="Open in editor")
-def random(edit):
+def random_note(edit):
     """Open a random note."""
     vault = ensure_vault()
     
@@ -388,7 +388,7 @@ def random(edit):
         console.print("[yellow]No notes found.[/yellow]")
         return
     
-    note_path = random.choice(notes)
+    note_path = random_module.choice(notes)
     content = note_path.read_text()
     fm, _ = extract_frontmatter(content)
     title = fm.get('title', note_path.stem)
