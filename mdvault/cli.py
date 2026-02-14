@@ -690,6 +690,13 @@ def tags():
 
 
 @cli.command()
+def shell():
+    """Start interactive shell mode."""
+    from mdvault.shell import start_shell
+    start_shell()
+
+
+@cli.command()
 def info():
     """Show vault information."""
     vault = ensure_vault()

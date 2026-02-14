@@ -4,6 +4,7 @@ A Python CLI tool for managing markdown note repositories — inspired by Obsidi
 
 ## Features
 
+- 🐚 **Interactive Shell** — REPL-style interface with `/` commands and tab completion
 - 📝 Create and edit markdown notes
 - 📅 **Daily notes** — automatic date-based notes
 - 🔗 **Wiki-style links** — `[[note]]` syntax support
@@ -46,6 +47,11 @@ mdvault init ~/my-notes --auto-commit
 
 # Navigate to your vault
 cd ~/my-notes
+
+# Start interactive shell (recommended!)
+mdvault shell
+
+# Or use individual commands:
 
 # Create today's daily note
 mdvault daily
@@ -90,7 +96,62 @@ mdvault tags
 mdvault info
 ```
 
+## Interactive Shell
+
+MDVault includes an interactive shell mode with tab completion and type-ahead, similar to Claude's code experience:
+
+```bash
+cd ~/my-notes
+mdvault shell
+```
+
+Inside the shell, use `/` commands:
+
+```
+mdvault> /new "My Note" -t ideas
+✓ Created: My Note
+
+mdvault> /list
+┏━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━┓
+┃ Title   ┃ Tags  ┃ Path       ┃
+┡━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━┩
+│ My Note │ ideas │ my-note.md │
+└─────────┴───────┴────────────┘
+
+mdvault> /show "My Note"
+# My Note
+
+mdvault> /exit
+Goodbye!
+```
+
+**Features:**
+- Tab completion for commands and note names
+- Command history (up/down arrows)
+- Type-ahead suggestions
+- All standard commands work with `/` prefix
+
+**Available Shell Commands:**
+- `/new <title> [-t tag]` — Create note
+- `/daily` — Today's note
+- `/list [query]` — List notes
+- `/recent [n]` — Recent notes
+- `/random` — Random note
+- `/search <query>` — Search
+- `/show <note>` — Display note
+- `/edit <note>` — Edit in $EDITOR
+- `/backlinks <note>` — Show backlinks
+- `/mv <old> <new>` — Rename
+- `/archive <note>` — Archive
+- `/tags` — List tags
+- `/info` — Vault info
+- `/help` — Show help
+- `/exit` — Quit shell
+
 ## Commands
+
+### `mdvault shell`
+Start the interactive shell mode. Recommended for regular use!
 
 ### `mdvault init [PATH] [OPTIONS]`
 Initialize a new vault in the specified directory (defaults to current directory).
@@ -262,6 +323,7 @@ Each vault contains a `.mdvault.json` file with vault metadata:
 - Python 3.8+
 - click >= 8.0.0
 - rich >= 10.0.0
+- prompt-toolkit >= 3.0.0
 - fzf (optional, for `mdvault find`)
 - git (optional, for auto-commit)
 
